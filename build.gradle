@@ -1,0 +1,80 @@
+
+//buildscript {
+//	dependencies {
+//		classpath 'cn.easyproject:ojdbc6:12.1.0.2.0'
+//		classpath 'org.liquibase:liquibase-core:3.6.3'
+//		classpath "org.liquibase:liquibase-gradle-plugin:2.0.1"
+//	}
+//}
+
+plugins {
+	id 'org.springframework.boot' version '2.1.6.RELEASE'
+	id 'java'
+	id 'org.liquibase.gradle' version '2.0.1'
+}
+
+repositories {
+	mavenCentral()
+	maven{ url 'http://maven.aliyun.com/nexus/content/groups/public/'}
+}
+
+
+apply plugin: 'io.spring.dependency-management'
+
+group = 'com.example'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '1.8'
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.0.1'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	compile 'cn.easyproject:ojdbc6:12.1.0.2.0'
+	liquibaseRuntime 'cn.easyproject:ojdbc6:12.1.0.2.0'
+	liquibaseRuntime 'org.liquibase:liquibase-core:3.6.1'
+	liquibaseRuntime 'org.liquibase:liquibase-groovy-dsl:2.0.1'
+	liquibaseRuntime 'ch.qos.logback:logback-core:1.2.3'
+	liquibaseRuntime 'ch.qos.logback:logback-classic:1.2.3'
+}
+
+
+//生成对比记录文件的位置
+project.ext.diffChangelogFile = 'src/main/resources/liquibase/changelog/' + new Date().format('yyyyMMddHHmmss') + '_changelog.xml'
+//生成sql文件的位置
+project.ext.generateSql = 'src/main/resources/liquibase/sql/' + new Date().format('yyyyMMddHHmmss') + '_update.sql'
+
+liquibase {
+	activities {
+		prod {
+			//driver 'com.microsoft.sqlserver.jdbc.SQLServerDriver'
+			url 'jdbc:sqlserver://localhost:1433;database=damManager'
+			username 'SA'
+			password 'yourStrong(!)Password'
+			changeLogFile 'src/main/resources/liquibase/master.xml'
+			defaultSchemaName ''
+			logLevel 'debug'
+			outputFile project.ext.generateSql
+		}
+		dev {
+			driver 'oracle.jdbc.OracleDriver'
+			url 'jdbc:oracle:thin:@192.168.10.128:1521:ORCL'
+			username 'xdo_demo'
+			password 'dcjet'
+			changeLogFile 'src/main/resources/liquibase/master.xml'
+			defaultSchemaName ''
+			logLevel 'debug'
+			outputFile project.ext.generateSql
+		}
+		diffLog {
+			driver 'oracle.jdbc.OracleDriver'
+			url 'jdbc:oracle:thin:@192.168.10.128:1521:ORCL'
+			username 'abc'
+			password 'dddd'
+			changeLogFile project.ext.diffChangelogFile
+			defaultSchemaName ''
+			logLevel 'debug'
+			classpath 'src/main/resources/'
+		}
+		runList = 'dev' // project.ext.runList  gradle update -PrunList=main // 这里代表选择哪一个配置 可用参数代替
+	}
+}

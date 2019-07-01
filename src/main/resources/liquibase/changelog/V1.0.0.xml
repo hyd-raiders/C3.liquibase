@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+    <changeSet author="xyliu" id="11">
+        <createProcedure catalogName="cat"
+                         dbms="h2, oracle"
+                         encoding="utf8"
+                         procedureName="pro_1"
+                         relativeToChangelogFile="false">create or replace procedure pro_1(id varchar2)
+            is name varchar2(20);
+            begin
+            select  * from  test1 ;
+            end pro_1;</createProcedure>
+    </changeSet>
+    <changeSet author="xyliu" id="12">
+        <createProcedure catalogName="cat"
+                         dbms="h2, oracle"
+                         encoding="utf8"
+                         procedureName="pro_1"
+                         relativeToChangelogFile="false">create or replace procedure pro_1(id varchar2)
+            is name varchar2(20);
+            begin
+            select  * from  test1 ;
+            end;</createProcedure>
+    </changeSet>
+    <changeSet author="xyliu" id="13">
+        <createProcedure catalogName="cat"
+                         dbms="h2, oracle"
+                         encoding="utf8"
+                         procedureName="pro_1"
+                         relativeToChangelogFile="false">create or replace procedure pro_1(id varchar2)
+            is
+            name varchar2(20); -- 声明一个变量
+            begin
+            -- 以下就是存储过程的主体部分
+            dbms_output.put_line('id:' || id || ' name:' || name);
+
+            end;</createProcedure>
+    </changeSet>
+
+</databaseChangeLog>
