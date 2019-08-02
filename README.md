@@ -174,6 +174,63 @@ gradle tag #（为当前数据库打上标签）
 # gradle tag -PliquibaseCommandValue=V1.0.0
 ```
 
+## 命令行模式执行
+1. 部署liquibase
+```shell
+#下载官方的可执行包 https://download.liquibase.org/download/
+
+wget -c https://github.com/liquibase/liquibase/releases/download/liquibase-parent-3.7.0/liquibase-3.7.0-bin.tar.gz
+
+mkdir -p /usr/local/liquibase-3.7.0
+
+tar -xvzf liquibase-3.7.0-bin.tar.gz -C /usr/local/liquibase-3.7.0
+
+#添加环境变量，将liquibase的目录加入PATH
+vim /etc/profile
+## 进行操作
+export PATH=$PATH:/usr/local/liquibase-3.7.0
+
+source /etc/profile
+
+输入liquibase进行测试
+```
+2. 导入jdbc的jar包
+
+将jdbc driver包上传至liquibase目录下的lib目录中
+
+2. 执行命令脚本
+```shell
+##--update
+
+liquibase \
+--driver=oracle.jdbc.OracleDriver \
+--changeLogFile=src/main/resources/liquibase/master.xml \
+--url="jdbc:oracle:thin:@192.168.10.xxx:1521:ORCL" \
+--username=xxx \
+--password=xxx \
+update
+
+##--rollback
+
+liquibase \
+--driver=oracle.jdbc.OracleDriver \
+--changeLogFile=src/main/resources/liquibase/master.xml \
+--url="jdbc:oracle:thin:@192.168.10.xxx:1521:ORCL" \
+--username=xxx \
+--password=xxx \
+rollback V1.1.1
+
+##--tag
+
+liquibase \
+--driver=oracle.jdbc.OracleDriver \
+--changeLogFile=src/main/resources/liquibase/master.xml \
+--url="jdbc:oracle:thin:@192.168.10.xxx:1521:ORCL" \
+--username=xxx \
+--password=xxx \
+tag V1.1.2
+
+```
 
 
 ## 脚本管理规约（仅推荐）
